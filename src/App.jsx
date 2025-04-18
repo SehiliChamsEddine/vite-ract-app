@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import Search from './components/Search';
@@ -9,6 +9,8 @@ function App() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+	const searchRef = useRef(null);
 
 	const options = useMemo(() => {
 		return {
@@ -21,6 +23,7 @@ function App() {
 	}, []);
 	const fetchData = async (url, options) => {
 		setIsLoading(true);
+
 		fetch(url, options)
 			.then((res) => res.json())
 			.then((json) => {
@@ -35,6 +38,7 @@ function App() {
 				console.log(error.data, error.message);
 			});
 	};
+
 	useDebounce(
 		() => {
 			setDebouncedSearchTerm(searchTerm);
@@ -43,9 +47,15 @@ function App() {
 		[searchTerm]
 	);
 	useEffect(() => {
-		const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-			debouncedSearchTerm
-		)}`;
+		let url;
+		if (!debouncedSearchTerm) {
+			url =
+				'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc';
+		} else {
+			url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+				debouncedSearchTerm
+			)}`;
+		}
 
 		fetchData(url, options);
 	}, [debouncedSearchTerm, options]);
@@ -74,31 +84,16 @@ function App() {
 							Find <span className="gradient-text">Movies</span> You’ll Love
 							Without the Hassle
 						</p>
-						<Search search={{ setSearchTerm, searchTerm }} />
+						<Search ref={searchRef} search={{ setSearchTerm, searchTerm }} />
 					</header>
 					<div className="flex flex-wrap mt-20 w-full justify-center gap-5 ">
 						{isLoading ? (
-							<p className=" text-3xl font-bold"> "Loading ..."</p>
+							<p className=" text-3xl font-bold">Loading ...</p>
 						) : errMessage ? (
 							errMessage
 						) : (
 							movieList.map((movie) => {
-								return (
-									<div
-										key={movie.id}
-										className=" w-[300px] rounded-2xl  px-[18px] py-5 shadow-card  flex flex-col content-between overflow-hidden bg-card "
-									>
-										<img
-											className="object-cover   rounded-2xl"
-											src={
-												movie.poster_path
-													? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-													: 'No-Poster.png'
-											}
-											alt="Img Poster"
-										/>
-									</div>
-								);
+								return <Card key={movie.id} movie={movie} />;
 							})
 						)}
 					</div>
