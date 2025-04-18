@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'react-use';
-
+import Card from './components/Card';
 import Search from './components/Search';
 
 function App() {
