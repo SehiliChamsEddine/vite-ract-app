@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap');
+
+@import 'tailwindcss';
+
+
+@theme {
+	--shadow-card : 0px 12px 32px 0px rgba(206, 206, 251, 0.02) inset;
+	--color-body: #030014;
+	--color-card: #0f0d23;
+	--color-search: #a8b5db;
+	--search-icon-color: #ab8bff;
+	--color-search-bg: #0f0d23;
+	--card-gray-color: #9ca4ab;
+	--background-image-hero-img: url('./assets/bg.png');
+	--font-DM: 'DM Sans', serif;
+	--breakpoint-xs: 480px;
+}
+
+@layer base {
+
+	body {
+    @apply  bg-body font-DM min-h-screen w-screen overflow-x-hidden;
+	}
+
+	header {
+		@apply mt-3 lg:mt-10 xl:h-screen ;
+	}
+	header img {
+		@apply w-lg lg:w-xl h-auto  object-contain mx-auto drop-shadow-md   ;
+	}
+}
+@layer components {
+	.pattern {
+		@apply bg-hero-img bg-cover bg-center w-screen  h-screen  absolute;
+	}
+	.wrapper {
+		@apply flex flex-col items-center text-white mx-auto max-w-[1400px] px-5 lg:px-12  ;
+	}
+	.search {
+		@apply bg-search-bg rounded-2xl  flex items-center max-w-lg h-[70px] relative pl-12 pr-7 mx-auto mt-5;
+	}
+}
+@layer utilities {
+	.gradient-text {
+		@apply bg-gradient-to-r from-[#d6c7ff] to-[#ab8bff] bg-clip-text text-transparent;
+	}
+}
