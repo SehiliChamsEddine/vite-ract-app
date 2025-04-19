@@ -25,7 +25,7 @@
 	}
 
 	header {
-		@apply mt-3 lg:mt-10 xl:h-screen ;
+		@apply mt-3 lg:mt-10  ;
 	}
 	header img {
 		@apply w-lg lg:w-xl h-auto  object-contain mx-auto drop-shadow-md   ;

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { RiseLoader } from 'react-spinners';
 import { useDebounce } from 'react-use';
 import Card from './components/Card';
 import Search from './components/Search';
@@ -48,7 +49,7 @@ function App() {
 	);
 	useEffect(() => {
 		let url;
-		if (!debouncedSearchTerm) {
+		if (!debouncedSearchTerm.trim()) {
 			url =
 				'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc';
 		} else {
@@ -86,9 +87,12 @@ function App() {
 						</p>
 						<Search ref={searchRef} search={{ setSearchTerm, searchTerm }} />
 					</header>
-					<div className="flex flex-wrap mt-20 w-full justify-center gap-5 ">
+					<div className="flex flex-wrap mt-20 w-full justify-center 2xl:justify-between gap-10 lg:gap-5 ">
+						<h2 className="font-bold leading-8 text-3xl w-full my-4">
+							Popular
+						</h2>
 						{isLoading ? (
-							<p className=" text-3xl font-bold">Loading ...</p>
+							<RiseLoader color="#ab8bff" className=" mx-auto sm:my-30" />
 						) : errMessage ? (
 							errMessage
 						) : (
