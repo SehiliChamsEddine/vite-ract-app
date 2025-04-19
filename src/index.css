@@ -8,6 +8,7 @@
 	--color-body: #030014;
 	--color-card: #0f0d23;
 	--color-search: #a8b5db;
+	--color-stroke :rgba(206, 206, 251, 0.5);
 	--search-icon-color: #ab8bff;
 	--color-search-bg: #0f0d23;
 	--card-gray-color: #9ca4ab;
@@ -32,7 +33,10 @@
 	}
 
 }
+
 @layer components {
+	
+		
 	.pattern {
 		@apply bg-hero-img bg-cover bg-center w-screen  h-screen  absolute;
 	}
@@ -42,9 +46,34 @@
 	.search {
 		@apply bg-search-bg rounded-2xl  flex items-center max-w-lg h-[70px] relative pl-12 pr-7 mx-auto mt-5;
 	}
+	.trending {	
+	   @apply w-full mt-20 ;
+		& .movies {
+			@apply  flex flex-row gap-3.5 items-center  overflow-x-scroll overflow-y-hidden hide-scrollbar;
+		}
+		& .movies .movie {
+			@apply flex flex-row items-center w-fit shrink-0 ;
+		}
+		& .movies .movie span {
+			@apply shrink-0 block  text-[140px]  leading-16 font-extrabold text-[#CECEFB1A] [-webkit-text-stroke:2px_rgba(206,206,251,0.4)] mx-1;
+		}
+		& .movies .movie img {
+			@apply  shrink-0 w-[200px] h-[300px] rounded-[8px];
+		}
+	
+	}
 }
 @layer utilities {
 	.gradient-text {
 		@apply bg-gradient-to-r from-[#d6c7ff] to-[#ab8bff] bg-clip-text text-transparent;
 	}
+
 }
+@utility hide-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+  
+	&::-webkit-scrollbar {
+	  display: none;
+	}
+  }

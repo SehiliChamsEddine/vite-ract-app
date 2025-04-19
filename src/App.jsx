@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { RiseLoader } from 'react-spinners';
 import { useDebounce } from 'react-use';
+import { getTrendingMovies, updateMoviesSearchCount } from './appwrite';
 import Card from './components/Card';
 import Search from './components/Search';
 
@@ -10,6 +11,8 @@ function App() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+	const [trendingMovies, setTrendingMovies] = useState([]);
+	const [isLoadingTrendingMovies, setIsLoadingTrendingMovies] = useState(true);
 
 	const searchRef = useRef(null);
 
@@ -22,15 +25,26 @@ function App() {
 			},
 		};
 	}, []);
-	const fetchData = async (url, options) => {
-		setIsLoading(true);
 
+	const LoadMovies = async () => {
+		setIsLoadingTrendingMovies(true);
+		const result = await getTrendingMovies();
+		setTrendingMovies(result);
+		setIsLoadingTrendingMovies(false);
+	};
+
+	const fetchData = (url, options, on) => {
+		setIsLoading(true);
 		fetch(url, options)
 			.then((res) => res.json())
 			.then((json) => {
-				setMovieList(json.results ? json.results : []);
+				setMovieList(json.results || []);
+
 				setIsLoading(false);
 				setErrMessage('');
+				if (json.results && on === 'search') {
+					updateMoviesSearchCount(json.results[0]);
+				}
 			})
 			.catch((error) => {
 				setErrMessage('failed to load movies');
@@ -48,17 +62,18 @@ function App() {
 		[searchTerm]
 	);
 	useEffect(() => {
-		let url;
+		let url, on;
 		if (!debouncedSearchTerm.trim()) {
 			url =
 				'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc';
+			on = 'load';
 		} else {
 			url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
 				debouncedSearchTerm
 			)}`;
+			on = 'search';
 		}
-
-		fetchData(url, options);
+		fetchData(url, options, on);
 	}, [debouncedSearchTerm, options]);
 	useEffect(() => {
 		const url =
@@ -70,6 +85,9 @@ function App() {
 			console.log(error.name, error.message);
 		}
 	}, [options]);
+	useEffect(() => {
+		LoadMovies();
+	}, []);
 
 	return (
 		<>
@@ -87,12 +105,39 @@ function App() {
 						</p>
 						<Search ref={searchRef} search={{ setSearchTerm, searchTerm }} />
 					</header>
-					<div className="flex flex-wrap mt-20 w-full justify-center 2xl:justify-between gap-10 lg:gap-5 ">
-						<h2 className="font-bold leading-8 text-3xl w-full my-4">
+					<div className="trending">
+						<h2 className=" font-bold leading-8 text-3xl w-full my-6">
+							Trending
+						</h2>
+						<div className="movies">
+							{isLoadingTrendingMovies ? (
+								<RiseLoader
+									color="#ab8bff"
+									className=" mx-auto my-10 sm:my-30"
+								/>
+							) : (
+								trendingMovies.map((movie, index) => (
+									<div key={movie.$id} className="movie">
+										<span>{index + 1}</span>
+										<img
+											src={
+												movie.poster_url
+													? `https://image.tmdb.org/t/p/w500${movie.poster_url}`
+													: 'No-Poster.png'
+											}
+											alt={movie.title}
+										/>
+									</div>
+								))
+							)}
+						</div>
+					</div>
+					<div className="flex flex-wrap  w-full justify-center 2xl:justify-between gap-10 lg:gap-5 ">
+						<h2 className=" font-bold leading-8 text-3xl w-full my-6">
 							Popular
 						</h2>
 						{isLoading ? (
-							<RiseLoader color="#ab8bff" className=" mx-auto sm:my-30" />
+							<RiseLoader color="#ab8bff" className=" mx-auto my-10 sm:my-30" />
 						) : errMessage ? (
 							errMessage
 						) : (
