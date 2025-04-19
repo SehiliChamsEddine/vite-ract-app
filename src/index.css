@@ -5,6 +5,9 @@
 
 @theme {
 	--shadow-card : 0px 12px 32px 0px rgba(206, 206, 251, 0.02) inset;
+	--shadow-inner-card :0px 12px 32px 0px rgba(206, 206, 251, 0.02) inset;
+	--shadow-outer-card :0px 0px 100px 0px rgba(171, 139, 255, 0.3);
+
 	--color-body: #030014;
 	--color-card: #0f0d23;
 	--color-search: #a8b5db;

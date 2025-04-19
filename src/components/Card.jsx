@@ -1,10 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Card = ({ movie }) => {
+	const navigate = useNavigate();
 	return (
-		<div className=" w-[300px] rounded-2xl  px-[18px] py-5 shadow-card  flex flex-col content-between overflow-hidden bg-card backdrop-blur-lg">
+		<div
+			onClick={() => navigate(`/movie/${movie.id}`, { state: { movie } })}
+			className="cursor-pointer hover:brightness-75 duration-300 ease-in-out relative group hover:scale-[1.05] w-[300px] rounded-2xl  px-[18px] py-5 shadow-card  flex flex-col content-between overflow-hidden bg-card backdrop-blur-lg"
+		>
 			<img
-				className="object-cover rounded-2xl"
+				className="   rounded-2xl "
 				src={
 					movie.poster_path
 						? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
