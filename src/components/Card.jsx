@@ -27,13 +27,13 @@ const Card = ({ movie }) => {
 					<span>•</span>
 					{movie.original_language ? (
 						<p className="flex gap-0.5  font-bold capitalize">
-							{movie.original_language}
+							{movie.original_language ? movie.original_language : 'N/A'}
 						</p>
 					) : null}
 					<span>•</span>
 					{movie.release_date ? (
 						<p className="flex gap-0.5  font-bold">
-							{movie.release_date.split('-')[0]}
+							{movie.release_date ? movie.release_date.split('-')[0] : 'N/A'}
 						</p>
 					) : null}
 				</div>
