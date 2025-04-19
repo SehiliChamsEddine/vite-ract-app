@@ -20,7 +20,9 @@ const Card = ({ movie }) => {
 							<img src="star.svg" alt="Rating" />
 							{movie.vote_average.toFixed(1)}
 						</p>
-					) : null}
+					) : (
+						'N/A'
+					)}
 
 					<span>•</span>
 					{movie.original_language ? (
